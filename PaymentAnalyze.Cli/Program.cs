@@ -1,3 +1,15 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using PaymentAnalyze.Cli.Commands;
+using Spectre.Console.Cli;
 
-Console.WriteLine("Hello, World!");
+public class Program
+{
+    public static int Main(string[] args)
+    {
+        var commandApp = new CommandApp();
+        commandApp.Configure(x =>
+        {
+            x.AddCommand<DownloadCommand>("download");
+        });
+        return commandApp.Run(args);
+    }
+}
