@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentAnalyze.Cli", "PaymentAnalyze.Cli\PaymentAnalyze.Cli.csproj", "{C6D6C281-BFC2-48E2-8927-4F4C0643BEAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyForward.Client", "MoneyForward.Client\MoneyForward.Client.csproj", "{875BDAEA-CBA2-4332-8050-3890D5EE970D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{C6D6C281-BFC2-48E2-8927-4F4C0643BEAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6D6C281-BFC2-48E2-8927-4F4C0643BEAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6D6C281-BFC2-48E2-8927-4F4C0643BEAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{875BDAEA-CBA2-4332-8050-3890D5EE970D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{875BDAEA-CBA2-4332-8050-3890D5EE970D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{875BDAEA-CBA2-4332-8050-3890D5EE970D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{875BDAEA-CBA2-4332-8050-3890D5EE970D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
