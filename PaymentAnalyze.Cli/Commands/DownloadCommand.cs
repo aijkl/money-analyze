@@ -8,7 +8,7 @@ public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, DownloadCommandSettings settings)
     {
-        using var tokenUtil = new TokenUtil(false, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
+        using var tokenUtil = new TokenUtil(true, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
         var token = tokenUtil.Login(settings.MailAddress, settings.Password);
 
         var moneyForwardClient = new MoneyForwardClient(token);
