@@ -11,7 +11,7 @@ public class ContentTypeException : Exception
 
 public class MoneyForwardClient : IDisposable
 {
-    private const string Url = "https://moneyforward.com/";
+    private const string Url = "https://moneyforward.com";
     private readonly HttpClient _httpclient;
     public MoneyForwardClient(string token)
     {
@@ -21,8 +21,8 @@ public class MoneyForwardClient : IDisposable
     }
     public async Task<HttpResponseMessage> FetchHistoryCsvAsync(DateOnly startDate)
     {
-        var response = await _httpclient.GetAsync($"{Url}/cf/csv?from={startDate.ToString("yyyy/MM/dd/")}");
-        var contentType = response.Headers.FirstOrDefault(x => x.Key == "Content-Type").Value?.ToList();
+        var response = await _httpclient.GetAsync($"{Url}/cf/csv?from={startDate.ToString("yyyy/MM/dd")}");
+        var contentType = response.Content.Headers.FirstOrDefault(x => x.Key == "Content-Type").Value?.ToList();
         if (contentType == null || contentType.All(x => x != "text/csv; charset=utf-8"))
         {
             throw new ContentTypeException("Content-TypeがCSVではありません、トークンの有効期限が切れている可能性があります");
