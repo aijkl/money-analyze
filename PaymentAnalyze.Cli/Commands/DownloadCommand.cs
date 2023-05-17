@@ -14,7 +14,7 @@ public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
         var moneyForwardClient = new MoneyForwardClient(token);
         for (var dateOnly = settings.Start; dateOnly < settings.Start.AddMonths(settings.MonthCount); dateOnly = dateOnly.AddMonths(1))
         {
-            var fileName = $"{dateOnly.ToString("yyyy-MM")}.csv";
+            var fileName = $"{dateOnly:yyyy-MM}.csv";
             using var response = await moneyForwardClient.FetchHistoryCsvAsync(dateOnly);
             await using var stream = await response.Content.ReadAsStreamAsync();
             await using var fileSteam = new FileStream(fileName, FileMode.OpenOrCreate);
