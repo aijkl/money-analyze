@@ -27,6 +27,7 @@ public class TokenUtil : IDisposable
         options.AddArgument("--output=/dev/null");
         options.AddArgument("--log-level=3l");
         options.AddArgument("--disable-blink-features=AutomationControlled");
+        options.AddArgument("--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15");
         options.PageLoadStrategy = PageLoadStrategy.Normal;
         
         if (headless)
@@ -37,11 +38,7 @@ public class TokenUtil : IDisposable
 
         _chromeDriver = new ChromeDriver(_service, options);
         _webDriverWait = new WebDriverWait(_chromeDriver, timeoutSpan);
-        
-        if (!headless)
-        {
-            _chromeDriver.Manage().Window.Maximize();
-        }
+        _chromeDriver.Manage().Window.Maximize();
     }
     public string Login(string email, string password)
     {
