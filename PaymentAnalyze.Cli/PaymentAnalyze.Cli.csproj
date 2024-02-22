@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="122.0.6261.5700" />
       <PackageReference Include="Spectre.Console.Cli" Version="0.46.0" />
     </ItemGroup>
 
