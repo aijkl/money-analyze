@@ -1,5 +1,6 @@
 using MoneyForward.Client;
 using PaymentAnalyze.Cli.Settings;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace PaymentAnalyze.Cli.Commands;
@@ -24,6 +25,7 @@ public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
                 var fullPath = Path.GetFullPath("./error.png");
                 await File.WriteAllBytesAsync(fullPath, tokenUtil.ChromeDriver.GetScreenshot().AsByteArray);
                 AnsiConsoleHelper.MarkupLine($"ログインに失敗しましたため、スクリーンショットを保存しました Path: ${fullPath}", AnsiConsoleHelper.State.Failure);
+                AnsiConsole.WriteException(e);
                 return 1;
             }
         }
