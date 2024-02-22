@@ -8,10 +8,17 @@ public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, DownloadCommandSettings settings)
     {
-        using var tokenUtil = new TokenUtil(false, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
-        var token = tokenUtil.Login(settings.MailAddress, settings.Password);
+        var cacheData = CacheData.LoadFromFile(settings.CacheFilePath);
+        if (DateTime.Now - cacheData.LastLogin > TimeSpan.FromDays(20))
+        {
+            using var tokenUtil = new TokenUtil(false, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
+            var timestamp = DateTime.Now;
+            cacheData.Token = tokenUtil.Login(settings.MailAddress, settings.Password);
+            cacheData.LastLogin = timestamp;
+            cacheData.SaveToFile();
+        }
 
-        var moneyForwardClient = new MoneyForwardClient(token);
+        var moneyForwardClient = new MoneyForwardClient(cacheData.Token);
         for (var dateOnly = settings.Start; dateOnly < settings.Start.AddMonths(settings.MonthCount); dateOnly = dateOnly.AddMonths(1))
         {
             var fileName = $"{dateOnly:yyyy-MM}.csv";
