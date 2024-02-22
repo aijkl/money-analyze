@@ -11,7 +11,7 @@ public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
         var cacheData = CacheData.LoadFromFile(settings.CacheFilePath);
         if (DateTime.Now - cacheData.LastLogin > TimeSpan.FromDays(20))
         {
-            using var tokenUtil = new TokenUtil(false, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
+            using var tokenUtil = new TokenUtil(true, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
             var timestamp = DateTime.Now;
             cacheData.Token = tokenUtil.Login(settings.MailAddress, settings.Password);
             cacheData.LastLogin = timestamp;
