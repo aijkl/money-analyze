@@ -12,10 +12,20 @@ public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
         if (DateTime.Now - cacheData.LastLogin > TimeSpan.FromDays(20))
         {
             using var tokenUtil = new TokenUtil(true, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
-            var timestamp = DateTime.Now;
-            cacheData.Token = tokenUtil.Login(settings.MailAddress, settings.Password);
-            cacheData.LastLogin = timestamp;
-            cacheData.SaveToFile();
+            try
+            {
+                var timestamp = DateTime.Now;
+                cacheData.Token = tokenUtil.Login(settings.MailAddress, settings.Password);
+                cacheData.LastLogin = timestamp;
+                cacheData.SaveToFile();
+            }
+            catch (Exception e)
+            {
+                var fullPath = Path.GetFullPath("./error.png");
+                await File.WriteAllBytesAsync(fullPath, tokenUtil.ChromeDriver.GetScreenshot().AsByteArray);
+                AnsiConsoleHelper.MarkupLine($"ログインに失敗しましたため、スクリーンショットを保存しました Path: ${fullPath}", AnsiConsoleHelper.State.Failure);
+                return 1;
+            }
         }
 
         var moneyForwardClient = new MoneyForwardClient(cacheData.Token);

@@ -6,9 +6,9 @@ namespace MoneyForward.Client;
 
 public class TokenUtil : IDisposable
 {
-    private readonly ChromeDriver _chromeDriver;
     private readonly ChromeDriverService _service;
     private readonly WebDriverWait _webDriverWait;
+    public readonly ChromeDriver ChromeDriver;
     public TokenUtil(bool headless, TimeSpan timeoutSpan)
     {
         _service = ChromeDriverService.CreateDefaultService();
@@ -36,47 +36,38 @@ public class TokenUtil : IDisposable
             options.AddArgument("--headless");
         }
 
-        _chromeDriver = new ChromeDriver(_service, options);
-        _webDriverWait = new WebDriverWait(_chromeDriver, timeoutSpan);
-        _chromeDriver.Manage().Window.Maximize();
+        ChromeDriver = new ChromeDriver(_service, options);
+        _webDriverWait = new WebDriverWait(ChromeDriver, timeoutSpan);
+        ChromeDriver.Manage().Window.Maximize();
     }
     public string Login(string email, string password)
     {
+        ChromeDriver.Navigate().GoToUrl("https://id.moneyforward.com/sign_in");
+
+        var mailElement = _webDriverWait.Until(driver => driver.FindElement(By.XPath("//input[@name='mfid_user[email]']")));
+        mailElement.SendKeys(email);
+        ChromeDriver.FindElement(By.XPath(@"//*[@id=""submitto""]")).Click();
+
+        var passwordElement = _webDriverWait.Until(driver => driver.FindElement(By.XPath("//input[@name='mfid_user[password]']")));
+        passwordElement.SendKeys(password);
+
+        ChromeDriver.FindElement(By.XPath(@"//*[@id=""submitto""]")).Click();
+
+        ChromeDriver.Navigate().GoToUrl("https://moneyforward.com/sign_in/");
+        _webDriverWait.Until(driver => driver.FindElement(By.XPath("/html/body/main/div/div/div[2]/div/section/div/div/form/button"))).Click();
         try
         {
-            _chromeDriver.Navigate().GoToUrl("https://id.moneyforward.com/sign_in");
-
-            var mailElement = _webDriverWait.Until(driver => driver.FindElement(By.XPath("//input[@name='mfid_user[email]']")));
-            mailElement.SendKeys(email);
-            _chromeDriver.FindElement(By.XPath(@"//*[@id=""submitto""]")).Click();
-
-            var passwordElement = _webDriverWait.Until(driver => driver.FindElement(By.XPath("//input[@name='mfid_user[password]']")));
-            passwordElement.SendKeys(password);
-
-            _chromeDriver.FindElement(By.XPath(@"//*[@id=""submitto""]")).Click();
-
-            _chromeDriver.Navigate().GoToUrl("https://moneyforward.com/sign_in/");
-            _webDriverWait.Until(driver => driver.FindElement(By.XPath("/html/body/main/div/div/div[2]/div/section/div/div/form/button"))).Click();
-            try
-            {
-                _webDriverWait.Until(driver => driver.FindElement(By.XPath("/html/body/main/div/div/div[2]/div/section/div/a"))).Click();
-            }
-            catch { /* ignored */ }
-
-            _webDriverWait.Until(driver => driver.FindElement(By.Id("page-home")));
-            return _chromeDriver.Manage().Cookies.AllCookies.FirstOrDefault(x => x.Name == "_moneybook_session")?.Value ?? throw new ApplicationException();
+            _webDriverWait.Until(driver => driver.FindElement(By.XPath("/html/body/main/div/div/div[2]/div/section/div/a"))).Click();
         }
-        catch (Exception e)
-        {
-            File.WriteAllBytes("dump.png", _chromeDriver.GetScreenshot().AsByteArray);
-            File.WriteAllText("error", e.ToString());
-            throw;
-        }
+        catch { /* ignored */ }
+
+        _webDriverWait.Until(driver => driver.FindElement(By.Id("page-home")));
+        return ChromeDriver.Manage().Cookies.AllCookies.FirstOrDefault(x => x.Name == "_moneybook_session")?.Value ?? throw new ApplicationException();
     }
 
     public void Dispose()
     {
-        _chromeDriver.Dispose();
+        ChromeDriver.Dispose();
         _service.Dispose();
     }
 }
