@@ -10,7 +10,11 @@ public class CacheData
     {
         Token = token;
     }
+    
+    [JsonProperty("token")]
     public string Token { set; get; }
+    
+    [JsonProperty("lastLogin")]
     public DateTime LastLogin { set; get; }
     
     public void SaveToFile()
@@ -20,7 +24,7 @@ public class CacheData
 
     public static CacheData LoadFromFile(string filePath)
     {
-        if(!File.Exists(filePath)) File.WriteAllText(filePath, string.Empty);
+        if(!File.Exists(filePath)) File.WriteAllText(filePath, JsonConvert.SerializeObject(new CacheData(string.Empty)));
         
         var cacheData = JsonConvert.DeserializeObject<CacheData>(File.ReadAllText(filePath)) ?? throw new Exception();
         cacheData._filepath = filePath;
