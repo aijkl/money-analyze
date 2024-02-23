@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MoneyForward.Client\MoneyForward.Client.csproj" />
+      <ProjectReference Include="..\MoneyForward\MoneyForward.csproj" />
     </ItemGroup>
 
     <ItemGroup>

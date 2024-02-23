@@ -1,3 +1,5 @@
+using System.Text;
+using MoneyForward;
 using MoneyForward.Client;
 using PaymentAnalyze.Cli.Settings;
 using Spectre.Console;
