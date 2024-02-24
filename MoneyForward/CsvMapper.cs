@@ -14,5 +14,6 @@ internal sealed class ExpensesMapper : CsvHelper.Configuration.ClassMap<Expenses
         Map(x => x.ServiceName).Index(4);
         Map(x => x.Category).Index(5);
         Map(x => x.SubCategory).Index(6);
+        Map(x => x.Transfer).Index(8).Convert(args => args.Row.GetField<int>(8) == 1);
     }
 }
