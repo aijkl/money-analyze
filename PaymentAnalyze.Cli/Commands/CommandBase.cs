@@ -8,7 +8,7 @@ namespace PaymentAnalyze.Cli.Commands;
 public abstract class CommandBase<TSettings> : AsyncCommand<TSettings> where TSettings : CommandSettings
 {
     private readonly TimeSpan _loginExpiredTime = TimeSpan.FromDays(20);
-    public async void LoginIfNeed(CacheData cacheData, SettingsBase settingsBase)
+    protected async void LoginIfNeed(CacheData cacheData, SettingsBase settingsBase)
     {
         if (DateTime.Now - cacheData.LastLogin <= _loginExpiredTime) return;
         using var tokenUtil = new TokenUtil(true, TimeSpan.FromSeconds(30));
