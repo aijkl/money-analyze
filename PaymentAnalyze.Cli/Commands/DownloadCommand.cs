@@ -32,16 +32,17 @@ public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
             }
         }
 
+        Directory.CreateDirectory(settings.CsvDirectory);
         var moneyForwardClient = new MoneyForwardClient(cacheData.Token);
         for (var dateOnly = settings.Start; dateOnly < settings.Start.AddMonths(settings.MonthCount); dateOnly = dateOnly.AddMonths(1))
         {
-            var fileName = $"{dateOnly:yyyy-MM}.csv";
+            var filePath = Path.Combine(settings.CsvDirectory, $"{dateOnly:yyyy-MM}.csv");
             using var response = await moneyForwardClient.FetchHistoryCsvAsync(dateOnly);
             await using var stream = await response.Content.ReadAsStreamAsync();
-            await using var fileSteam = new FileStream(fileName, FileMode.OpenOrCreate);
+            await using var fileSteam = new FileStream(filePath, FileMode.OpenOrCreate);
             await stream.CopyToAsync(fileSteam);
             
-            AnsiConsoleHelper.MarkupLine($"Download {fileName}", AnsiConsoleHelper.State.Success);
+            AnsiConsoleHelper.MarkupLine($"Download {filePath}", AnsiConsoleHelper.State.Success);
             await Task.Delay(settings.IntervalMs);
         }
         return 0;

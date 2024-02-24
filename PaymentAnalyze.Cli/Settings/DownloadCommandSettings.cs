@@ -5,11 +5,12 @@ namespace PaymentAnalyze.Cli.Settings;
 
 public class DownloadCommandSettings : CommandSettings
 {
-    public DownloadCommandSettings(string mailAddress, string password, string cacheFilePath)
+    public DownloadCommandSettings(string mailAddress, string password, string cacheFilePath, string csvDirectory)
     {
         MailAddress = mailAddress;
         Password = password;
         CacheFilePath = cacheFilePath;
+        CsvDirectory = csvDirectory;
     }
 
     [CommandOption("--selenium-timeout-ms")]
@@ -29,8 +30,11 @@ public class DownloadCommandSettings : CommandSettings
 
     [CommandOption("--month-count")] 
     public int MonthCount { set; get; } = 1;
-    
-    [CommandOption("--cache-file-path")]
+
+    [CommandOption("--csv-directory")] 
+    public string CsvDirectory { set; get; }
+
+    [CommandOption("--cache-file-path")] 
     public string CacheFilePath { set; get; }
 
     public override ValidationResult Validate()
