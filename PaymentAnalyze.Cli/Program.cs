@@ -8,6 +8,7 @@ public class Program
         var commandApp = new CommandApp();
         commandApp.Configure(x =>
         {
+            x.AddCommand<UpdateRequestCommand>("update-request");
             x.AddCommand<DownloadCommand>("download");
         });
         return commandApp.Run(args);

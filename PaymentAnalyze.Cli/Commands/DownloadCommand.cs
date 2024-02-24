@@ -1,38 +1,17 @@
-using System.Text;
-using MoneyForward;
 using MoneyForward.Client;
 using PaymentAnalyze.Cli.Settings;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace PaymentAnalyze.Cli.Commands;
 
-public class DownloadCommand :  AsyncCommand<DownloadCommandSettings>
+public class DownloadCommand :  CommandBase<DownloadCommandSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, DownloadCommandSettings settings)
     {
         var cacheData = CacheData.LoadFromFile(settings.CacheFilePath);
-        if (DateTime.Now - cacheData.LastLogin > TimeSpan.FromDays(20))
-        {
-            using var tokenUtil = new TokenUtil(true, TimeSpan.FromSeconds(settings.SeleniumTimeoutMs));
-            try
-            {
-                var timestamp = DateTime.Now;
-                cacheData.Token = tokenUtil.Login(settings.MailAddress, settings.Password);
-                cacheData.LastLogin = timestamp;
-                cacheData.SaveToFile();
-            }
-            catch (Exception e)
-            {
-                var fullPath = Path.GetFullPath("./error.png");
-                await File.WriteAllBytesAsync(fullPath, tokenUtil.ChromeDriver.GetScreenshot().AsByteArray);
-                AnsiConsoleHelper.MarkupLine($"ログインに失敗しましたため、スクリーンショットを保存しました Path: ${fullPath}", AnsiConsoleHelper.State.Failure);
-                AnsiConsole.WriteException(e);
-                return 1;
-            }
-        }
-
+        LoginIfNeed(cacheData, settings);
         Directory.CreateDirectory(settings.CsvDirectory);
+        
         var moneyForwardClient = new MoneyForwardClient(cacheData.Token);
         for (var dateOnly = settings.Start; dateOnly < settings.Start.AddMonths(settings.MonthCount); dateOnly = dateOnly.AddMonths(1))
         {
