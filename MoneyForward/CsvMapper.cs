@@ -1,6 +1,6 @@
 namespace MoneyForward;
 
-internal sealed class ExpensesMapper : CsvHelper.Configuration.ClassMap<Expenses>
+internal sealed class ExpensesMapper : CsvHelper.Configuration.ClassMap<Transaction>
 {
     internal ExpensesMapper()
     {

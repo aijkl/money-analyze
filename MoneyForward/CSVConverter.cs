@@ -7,7 +7,7 @@ namespace MoneyForward;
 
 public static class CsvConverter
 {
-    public static IEnumerable<Expenses> Convert(string path, Encoding encoding)
+    public static IEnumerable<Transaction> Convert(string path, Encoding encoding)
     {
         using var textReader = new StreamReader(path, encoding);
         using var csvReader = new CsvReader(textReader, new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -15,6 +15,6 @@ public static class CsvConverter
             TrimOptions = TrimOptions.Trim
         });
         csvReader.Context.RegisterClassMap<ExpensesMapper>();
-        return csvReader.GetRecords<Expenses>().ToList();
+        return csvReader.GetRecords<Transaction>().ToList();
     }
 }

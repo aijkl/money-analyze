@@ -1,6 +1,6 @@
 ﻿namespace MoneyForward;
 
-public class Expenses
+public class Transaction
 {
     public DateOnly Date { set; get; }
     public string Summary { set; get; } = string.Empty;
